@@ -1,0 +1,15 @@
+Package: bcTSNE
+Type: Package
+Title: Perform batch-corrected t-SNE 
+Version: 0.1.0
+Authors@R: c(person("Dayne L", "Filer", 
+                    role = c("aut", "cre"), 
+                    email = "dayne.filer@gmail.com"),
+             person("Emanuele", "Aliverti", 
+                    role = c("aut"), 
+                    email = "aliverti@stat.unipd.it")) 
+Maintainer: Dayne Filer <dayne.filer@gmail.com>
+Description: To be added. 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
