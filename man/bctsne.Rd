@@ -4,12 +4,14 @@
 \alias{bctsne}
 \title{Calculate BC t-SNE by orthogonal gradient descent}
 \usage{
-bctsne(X, Z, outDim, perplexity)
+bctsne(X, Z, k = 50, outDim = 2, perplexity = 30)
 }
 \arguments{
 \item{X}{numeric matrix, input matrix}
 
 \item{Z}{numeric matrix, covariate matrix}
+
+\item{k}{integer of length 1, reduced dimension (number of eigenvectors)}
 
 \item{outDim}{integer of length 1, the output dimension}
 

@@ -6,6 +6,7 @@
 #' @details Will take out when SOG gets added to CRAN
 #' @return numeric matrix (A + t(A))
 #' @importFrom stats lm
+#' @importFrom RSpectra svds
 #' @export
 
 bctsOG <- function(X, Z, k = max(2, round(NCOL(X)/10)), rescale = FALSE) {
@@ -23,9 +24,9 @@ bctsOG <- function(X, Z, k = max(2, round(NCOL(X)/10)), rescale = FALSE) {
   
   ## Perform algorithm
   if (rescale) X <- scale(X)
-  SVD <- svd(X, nu = k, nv = k)
-  LM <- lm(SVD$u %*% diag(SVD$d[1:k]) ~ -1 + Z)
-  S <- SVD$u %*% diag(SVD$d[1:k]) - Z %*% LM$coef
+  SVD <- svds(A = X, k = k)
+  LM <- lm(SVD$u %*% diag(SVD$d) ~ -1 + Z)
+  S <- SVD$u %*% diag(SVD$d) - Z %*% LM$coef
   list(S = S, U = t(SVD$v))
   
 }

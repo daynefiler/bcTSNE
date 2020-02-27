@@ -234,8 +234,8 @@ void zeroMean(double *X, int *N, int *D) {
   free(mean); 
 }
 
-void tsne(double *X, int *N, int *D, double *Z, int *K, 
-          int *J, double *lp, double *Y) {
+void bctsne(double *X, int *N, int *D, double *Z, int *K,
+            int *J, double *lp, double *Y) {
   
   /* X is an array (1d column-major representation of 2d array) with the values 
    * to perform t-SNE; all transofrmations (e.g. PCA) are performed prior to the 
