@@ -235,7 +235,7 @@ void zeroMean(double *X, int *N, int *D) {
 }
 
 void bctsne(double *X, int *N, int *D, double *Z, int *K,
-            int *J, double *lp, double *Y) {
+            int *J, double *lp, double *Y, int *maxIter) {
   
   /* X is an array (1d column-major representation of 2d array) with the values 
    * to perform t-SNE; all transofrmations (e.g. PCA) are performed prior to the 
@@ -251,12 +251,13 @@ void bctsne(double *X, int *N, int *D, double *Z, int *K,
   
   // Compute p-values
   double *pval = (double*) calloc(N[0]*N[0], sizeof(double)); // p-values 
+  double pvalExag = 4.0;
   if (pval == NULL) error("Memory allocation failed.");  
   calcPvals(dist, N, lp, pval);
   free(dist);
   // Exaggerate p-values and adjust very small values.
   for (int i = 0; i < N[0]*N[0]; i++) {
-    pval[i] *= 4; 
+    pval[i] *= pvalExag; 
     if (pval[i] < 1e-12) pval[i] = 1e-12; 
   }
   
@@ -277,23 +278,22 @@ void bctsne(double *X, int *N, int *D, double *Z, int *K,
   double mom = 0.5; // initial momentum
   double eta = 200.0; // 
   double minGain = 0.01; // Coerce any smaller gains to 0.01
-  int maxIter = 1000; // maximum number of iterations to refine Y
   
   // Iterate and update Y
-  for (int iter = 0; iter < maxIter; iter++) {
+  for (int iter = 0; iter < maxIter[0]; iter++) {
     
     if (iter == 250) mom = 0.8;
     if (iter == 100) {
       for (int i = 0; i < N[0]*N[0]; i++) {
-        pval[i] /= 4; 
-        // if (pval[i] < 1e-12) pval[i] = 1e-12; 
+        pval[i] /= pvalExag; 
+        if (pval[i] < 1e-12) pval[i] = 1e-12; 
       }
     }
     
     // Calculate dY
     grad(Y, pval, N, J, Z, K, dY);
     for (int i = 0; i < N[0]*J[0]; i++) {
-      gains[i] = dY[i] > 0 && iY[i] > 0 ? gains[i] + 0.2 : gains[i] * 0.8;
+      gains[i] = dY[i] > 0 && iY[i] > 0 ? gains[i]*0.8 : gains[i] + 0.2;
       if (gains[i] < minGain) gains[i] = minGain;
       iY[i] = mom*iY[i] - eta*(gains[i]*dY[i]);
       Y[i] += iY[i];

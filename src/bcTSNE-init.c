@@ -11,7 +11,7 @@ void grad(double *Y, double *pval, int *N, int *J,
 void ols(double *A, int *M, int *N, double *B, int *NRHS, double *W);
 void zeroMean(double *X, int *N, int *D);
 void bctsne(double *X, int *N, int *D, double *Z, int *K,
-            int *J, double *lp, double *Y);
+            int *J, double *lp, double *Y, int *maxIter);
 
 static const R_CMethodDef cMethods[] = {
   {"ssx",       (DL_FUNC) &ssx,         4},
@@ -21,7 +21,7 @@ static const R_CMethodDef cMethods[] = {
   {"grad",      (DL_FUNC) &grad,        7},
   {"ols",       (DL_FUNC) &ols,         6},
   {"zeroMean",  (DL_FUNC) &zeroMean,    3},
-  {"bctsne",    (DL_FUNC) &bctsne,      8},
+  {"bctsne",    (DL_FUNC) &bctsne,      9},
   {NULL, NULL, 0}
 };
 

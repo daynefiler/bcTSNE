@@ -5,6 +5,8 @@
 #' @param k integer of length 1, reduced dimension (number of eigenvectors)
 #' @param outDim integer of length 1, the output dimension
 #' @param perplexity numeric of length 1, the t-SNE perplexity
+#' @param maxIter integer of length 1, the maximum iterations for the BC t-SNE
+#' algorithm
 #' @details 
 #' \code{X} should be preprocessed (e.g. PCA, centered and scaled). \code{Z}
 #' is the full model matrix, including the intercept. 
@@ -24,11 +26,13 @@
 #' @importFrom stats lm
 #' @export
 
-bctsne <- function(X, Z, k = 50, outDim = 2, perplexity = 30) {
+bctsne <- function(X, Z, k = 50, outDim = 2, perplexity = 30, maxIter = 1000) {
 
   ## Data checks
   stopifnot(is.numeric(X) & is.numeric(Z))
   stopifnot(is.numeric(outDim) & is.numeric(perplexity))
+  maxIter <- type.convert(maxIter)
+  stopifnot(is.integer(maxIter) && length(maxIter) == 1)
   if (length(outDim) > 1) {
     warning("length(outDim) > 1; only using the first element.")
     outDim <- outDim[1]
@@ -58,10 +62,11 @@ bctsne <- function(X, Z, k = 50, outDim = 2, perplexity = 30) {
   X <- as.vector(S)
   Z <- as.vector(Z)
   Y <- rep(0.0, N*J)
-  res <- .C("bctsne", X, N, D, Z, K, J, log(perplexity), Y)
+  res <- .C("bctsne", X, N, D, Z, K, J, log(perplexity), Y, maxIter)
   list(Xred = matrix(res[[1]], N, D), 
        Z = matrix(res[[4]], N, K), 
        perplexity = perplexity,
-       Y = matrix(res[[8]], N, J))
+       Y = matrix(res[[8]], N, J),
+       maxIter = maxIter)
   
 }

@@ -4,7 +4,7 @@
 \alias{bctsne}
 \title{Calculate BC t-SNE by orthogonal gradient descent}
 \usage{
-bctsne(X, Z, k = 50, outDim = 2, perplexity = 30)
+bctsne(X, Z, k = 50, outDim = 2, perplexity = 30, maxIter = 1000)
 }
 \arguments{
 \item{X}{numeric matrix, input matrix}
@@ -16,6 +16,9 @@ bctsne(X, Z, k = 50, outDim = 2, perplexity = 30)
 \item{outDim}{integer of length 1, the output dimension}
 
 \item{perplexity}{numeric of length 1, the t-SNE perplexity}
+
+\item{maxIter}{integer of length 1, the maximum iterations for the BC t-SNE
+algorithm}
 }
 \value{
 numeric matrix, t-SNE gradient
